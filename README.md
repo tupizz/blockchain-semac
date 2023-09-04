@@ -1,9 +1,10 @@
 ### Demo
 
-<video width="320" height="240" controls>
-  <source src="docs/semac-1.5x.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+
+https://github.com/tupizz/blockchain-semac/assets/15824865/b3b19de9-528c-40a9-b2a2-b25578027f02
+
+
 
 
 ### Running locally
