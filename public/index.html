@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Semac Blockchain</title>
+
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+        integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <h1>Semac Blockchain</h1>
+
+    <h2>My user id: <span id="my-user-id"></span></h2>
+
+    <!-- Form to send a transaction to blockchain -->
+    <h2>Send a Transaction</h2>
+    <form id="transaction-form">
+        <label for="data">Valor:</label>
+        <input type="number" id="data" name="data">
+
+        <label for="user_ids">User ID:</label>
+        <select name="user_ids" id="user_ids"></select>
+
+        <button type="submit">Send Transaction</button>
+    </form>
+
+    <!-- Blockchain design flow will be displayed here -->
+    <h2>Blockchain design flow:</h2>
+    <div class="blockchain" id="blockchain-state-flow"></div>
+
+    <!-- Blockchain will be displayed here -->
+    <h2>Blockchain State:</h2>
+    <pre id="blockchain-state"></pre>
+
+    <script>
+        const SERVER_URL = 'https://semac.ngrok.io';
+        const socket = io.connect(SERVER_URL);
+
+        // Request blockchain on connect
+        socket.emit('request-blockchain');
+
+        // Request users on connect
+        socket.on('response-my-user-id', userId => document.getElementById('my-user-id').textContent = userId);
+
+        // Every time a new block is mined, request the blockchain
+        socket.on('notify-new-block', _ => socket.emit('request-blockchain'));
+
+        // Request users on connect
+        socket.on('response-users', users => {
+            const select = document.getElementById('user_ids');
+            select.innerHTML = users.map(user => `<option value="${user}">${user}</option>`).join('');
+        });
+
+        // Update blockchain on response
+        socket.on('response-blockchain', blockchain => {
+            document.getElementById('blockchain-state').innerHTML = `
+                <pre class="code-block">
+                ${JSON.stringify(blockchain, null, 4)}
+                </pre>
+            `;
+
+            const blockchainContainer = document.getElementById('blockchain-state-flow');
+            blockchainContainer.innerHTML = blockchain.map(block =>
+                `<div class="block">
+                    <div class="block-header">
+                        Block #${block.index}
+                    </div>
+                    <div class="block-data">
+                        <strong>Data:</strong><br/>
+                        Amount: ${block.index !== 0 ? JSON.parse(block.data).amount : block.data}<br/>
+                        From: ${block.index !== 0 ? JSON.parse(block.data).from : block.data}<br/>
+                        To: ${block.index !== 0 ? JSON.parse(block.data).to : block.data}
+                    </div>
+                    <div class="block-detail">
+                        Prev Hash: ${block.previousHash.substring(0, 10)}...<br/>
+                        Timestamp: ${new Date(block.timestamp).toLocaleString()}<br/>
+                        Hash: ${block.hash.substring(0, 10)}...
+                    </div>
+                </div>`
+            ).join('');
+        });
+
+        // Send transaction on submit
+        document.getElementById('transaction-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            if(!event.target.data.value) return alert('Please, fill the amount field');
+
+            const transferPayload = {
+                amount: event.target.data.value,
+                from: document.getElementById('my-user-id').textContent,
+                to: document.getElementById('user_ids').value
+            };
+            socket.emit('new-block-mined', transferPayload);
+            event.target.reset();
+        });
+    </script>
+</body>
+
+</html>

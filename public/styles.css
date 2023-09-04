@@ -1,0 +1,111 @@
+ /* Some simple mobile-friendly styles */
+ body {
+     font-family: Arial, sans-serif;
+     padding: 15px;
+     margin: 0;
+ }
+
+ input,
+ select,
+ button {
+     width: 100%;
+     padding: 10px;
+     margin-bottom: 10px;
+     box-sizing: border-box;
+ }
+
+ .blockchain {
+     display: flex;
+     overflow-x: auto;
+     align-items: center;
+     white-space: nowrap;
+ }
+
+ .block {
+     display: inline-block;
+     border: 3px solid black;
+     padding: 10px;
+     margin: 10px;
+     border-radius: 5px;
+     position: relative;
+     min-width: 200px;
+     text-align: center;
+     background-color: #e0e0e0;
+     overflow: hidden;
+ }
+
+ .block-header {
+     font-weight: bold;
+     font-size: 16px;
+     /* Adjust as per your requirements */
+     border-bottom: 1px solid black;
+     padding: 5px;
+     background-color: #c0c0c0;
+ }
+
+ .block-data {
+     padding: 5px;
+     font-size: 14px;
+     /* Adjust as per your requirements */
+ }
+
+ .block-detail {
+     font-size: 10px;
+     /* Adjust as per your requirements */
+     color: #666;
+     /* A more subdued color */
+     margin: 5px 0;
+ }
+
+ .block::before,
+ .block::after {
+     content: '';
+     position: absolute;
+     top: 50%;
+     width: 20px;
+     height: 3px;
+     background-color: black;
+ }
+
+ .block::before {
+     left: -20px;
+     transform: translateY(-50%);
+ }
+
+ .block::after {
+     right: -20px;
+     transform: translateY(-50%);
+ }
+
+ .block:first-child::before,
+ .block:last-child::after {
+     display: none;
+ }
+
+ .block pre {
+     text-align: left;
+     white-space: pre-wrap;
+     /* Allows for line breaks in the stringified content */
+     word-wrap: break-word;
+     /* Breaks long words to the next line */
+     margin: 0;
+     /* Remove default margin */
+     font-size: 10px;
+     /* Reduce font size for better fit, adjust as needed */
+     overflow-y: auto;
+     /* Add scrollbar for longer content */
+     height: 160px;
+     /* Max height for the content in each block */
+ }
+
+ .code-block {
+     background-color: #282a36;
+     border-radius: 5px;
+     padding: 15px;
+     color: #f8f8f2;
+     font-family: "Courier New", Courier, monospace;
+     white-space: pre-wrap;
+     word-wrap: break-word;
+     line-height: 1.5;
+     overflow: auto;
+ }
