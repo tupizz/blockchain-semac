@@ -7,6 +7,17 @@
 
     <title>Semac Blockchain</title>
 
+    <!-- Library to better Present JSON -->
+    <script src="
+    https://cdn.jsdelivr.net/npm/json-formatter-js@2.3.4/dist/json-formatter.umd.min.js
+    "></script>
+    <link href="
+    https://cdn.jsdelivr.net/npm/json-formatter-js@2.3.4/dist/json-formatter.min.css
+    " rel="stylesheet">
+    <!-- UI library -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Socket io -->
     <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"
         integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
         crossorigin="anonymous"></script>
@@ -14,30 +25,46 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 
-<body>
-    <h1>Semac Blockchain</h1>
+<body class="bg-gray-100 font-sans">
 
-    <h2>My user id: <span id="my-user-id"></span></h2>
+    <div class="bg-gray-800 p-4 shadow-md text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">Semac Blockchain</h1>
+            <h2 class="text-lg">My ID: <span id="my-user-id" class="font-medium text-gray-100"></span></h2>
+        </div>
+    </div>
 
-    <!-- Form to send a transaction to blockchain -->
-    <h2>Send a Transaction</h2>
-    <form id="transaction-form">
-        <label for="data">Valor:</label>
-        <input type="number" id="data" name="data">
 
-        <label for="user_ids">User ID:</label>
-        <select name="user_ids" id="user_ids"></select>
+    <div class="container mx-auto p-4 md:p-8">
 
-        <button type="submit">Send Transaction</button>
-    </form>
+        <h2 class="text-2xl font-medium mb-4 text-gray-800">Send a Transaction</h2>
+        <form id="transaction-form" class="bg-gray-100 p-4 rounded shadow-md">
+            <div class="mb-4">
+                <label for="data" class="block text-sm font-medium text-gray-600 mb-2">Valor:</label>
+                <input type="number" id="data" name="data"
+                    class="p-2 w-full border rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-gray-500">
+            </div>
 
-    <!-- Blockchain design flow will be displayed here -->
-    <h2>Blockchain design flow:</h2>
-    <div class="blockchain" id="blockchain-state-flow"></div>
+            <div class="mb-4">
+                <label for="user_ids" class="block text-sm font-medium text-gray-600 mb-2">User ID:</label>
+                <select name="user_ids" id="user_ids"
+                    class="p-2 w-full border rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-gray-500"></select>
+            </div>
 
-    <!-- Blockchain will be displayed here -->
-    <h2>Blockchain State:</h2>
-    <pre id="blockchain-state"></pre>
+            <div class="flex justify-end">
+                <button type="submit" class="bg-gray-800 hover:bg-gray-700 text-white rounded-md p-2">Send
+                    Transaction</button>
+            </div>
+        </form>
+
+        <h2 class="text-2xl font-medium mt-6 mb-4 text-gray-800">Blockchain design flow:</h2>
+        <div class="blockchain bg-gray-100 p-4 rounded shadow-md" id="blockchain-state-flow"></div>
+
+        <h2 class="text-2xl font-medium mt-6 mb-4 text-gray-800">Blockchain State:</h2>
+        <pre id="blockchain-state" class="bg-gray-100 p-4 rounded shadow-md overflow-x-scroll"></pre>
+    </div>
+
+
 
     <script>
         const SERVER_URL = 'https://semac.ngrok.io';
@@ -60,15 +87,12 @@
 
         // Update blockchain on response
         socket.on('response-blockchain', blockchain => {
-            document.getElementById('blockchain-state').innerHTML = `
-                <pre class="code-block">
-                ${JSON.stringify(blockchain, null, 4)}
-                </pre>
-            `;
+            const formatter = new JSONFormatter(blockchain, 2);
+            document.getElementById('blockchain-state').appendChild(formatter.render());
 
             const blockchainContainer = document.getElementById('blockchain-state-flow');
             blockchainContainer.innerHTML = blockchain.map(block =>
-                `<div class="block">
+                `<div class="semac-block">
                     <div class="block-header">
                         Block #${block.index}
                     </div>
@@ -91,7 +115,7 @@
         document.getElementById('transaction-form').addEventListener('submit', function (event) {
             event.preventDefault();
 
-            if(!event.target.data.value) return alert('Please, fill the amount field');
+            if (!event.target.data.value) return alert('Please, fill the amount field');
 
             const transferPayload = {
                 amount: event.target.data.value,

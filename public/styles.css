@@ -21,7 +21,7 @@
      white-space: nowrap;
  }
 
- .block {
+ .semac-block {
      display: inline-block;
      border: 3px solid black;
      padding: 10px;
