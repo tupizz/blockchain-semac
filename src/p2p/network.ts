@@ -14,7 +14,7 @@ class P2PServer {
   // User ids stored in memory
   private userIds: string[] = [];
 
-  // Blockchain instance
+  // Blockchain in-memory instance
   private blockchain: Blockchain = Utils.createBlockchainFromScratch();
 
   constructor(httpServer: HttpServer) {
@@ -69,11 +69,6 @@ class P2PServer {
         this.io.emit('notify-new-block', blockAdded);
       }
     });
-  }
-
-  public broadcastLatest(): void {
-    this.io.emit('response-blockchain', this.blockchain.getBlockchain());
-    this.io.emit('response-users', this.userIds);
   }
 }
 
