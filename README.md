@@ -35,5 +35,5 @@ tunnels:
 version: "2"
 ```
 
-After this, run `npm run dev` and `npm run ngrok` in separate terminals.
+After this, run `npm run dev` and `ngrok start --all` in separate terminals.
 

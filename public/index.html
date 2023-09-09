@@ -87,7 +87,13 @@
 
         // Update blockchain on response
         socket.on('response-blockchain', blockchain => {
-            const formatter = new JSONFormatter(blockchain, 2);
+            console.log(blockchain)
+            const formatter = new JSONFormatter(blockchain, 1, {
+                hoverPreviewEnabled: true,
+            });
+            console.log(formatter.render())
+            formatter.removeChildren();
+            document.getElementById('blockchain-state').innerHTML = '';
             document.getElementById('blockchain-state').appendChild(formatter.render());
 
             const blockchainContainer = document.getElementById('blockchain-state-flow');
