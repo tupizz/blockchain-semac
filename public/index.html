@@ -7,6 +7,11 @@
 
     <title>Semac Blockchain</title>
 
+    <!-- links -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Library to better Present JSON -->
     <script src="
     https://cdn.jsdelivr.net/npm/json-formatter-js@2.3.4/dist/json-formatter.umd.min.js
@@ -25,7 +30,7 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-200 font-sans">
 
     <div class="bg-gray-800 p-4 shadow-md text-white">
         <div class="container mx-auto flex justify-between items-center">
@@ -37,7 +42,7 @@
 
     <div class="container mx-auto p-4 md:p-8">
 
-        <h2 class="text-2xl font-medium mb-4 text-gray-800">Send a Transaction</h2>
+        <h2 class="text-2xl font-medium mb-4 text-gray-800"><i class="fa-solid fa-sack-dollar"></i> How much "Semaczinho" do you want to send?</h2>
         <form id="transaction-form" class="bg-gray-100 p-4 rounded shadow-md">
             <div class="mb-4">
                 <label for="data" class="block text-sm font-medium text-gray-600 mb-2">Valor:</label>
@@ -57,14 +62,12 @@
             </div>
         </form>
 
-        <h2 class="text-2xl font-medium mt-6 mb-4 text-gray-800">Blockchain design flow:</h2>
+        <h2 class="text-2xl font-medium mt-6 mb-4 text-gray-800"><i class="fa-brands fa-hive"></i> Chain of blocks flow:</h2>
         <div class="blockchain bg-gray-100 p-4 rounded shadow-md" id="blockchain-state-flow"></div>
 
-        <h2 class="text-2xl font-medium mt-6 mb-4 text-gray-800">Blockchain State:</h2>
+        <h2 class="text-2xl font-medium mt-6 mb-4 text-gray-800"><i class="fa-solid fa-database"></i> Updated Blockchain State:</h2>
         <pre id="blockchain-state" class="bg-gray-100 p-4 rounded shadow-md overflow-x-scroll"></pre>
     </div>
-
-
 
     <script>
         const SERVER_URL = 'https://semac.ngrok.io';
@@ -87,12 +90,10 @@
 
         // Update blockchain on response
         socket.on('response-blockchain', blockchain => {
-            console.log(blockchain)
             const formatter = new JSONFormatter(blockchain, 1, {
                 hoverPreviewEnabled: true,
             });
-            console.log(formatter.render())
-            formatter.removeChildren();
+
             document.getElementById('blockchain-state').innerHTML = '';
             document.getElementById('blockchain-state').appendChild(formatter.render());
 
@@ -128,6 +129,7 @@
                 from: document.getElementById('my-user-id').textContent,
                 to: document.getElementById('user_ids').value
             };
+
             socket.emit('new-block-mined', transferPayload);
             event.target.reset();
         });

@@ -1,8 +1,9 @@
  /* Some simple mobile-friendly styles */
  body {
      font-family: Arial, sans-serif;
-     padding: 15px;
      margin: 0;
+     padding: 0;
+     overflow-x: hidden;
  }
 
  input,
