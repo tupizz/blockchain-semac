@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semac Blockchain Miner</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Socket io -->
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+        integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+        crossorigin="anonymous"></script>
+</head>
+
+
+<body class="bg-gray-200 font-sans">
+    <div class="bg-gray-800 p-4 shadow-md text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">Semac Blockchain Miner</h1>
+        </div>
+    </div>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <h2 class="text-2xl font-medium mb-4 text-gray-800">Prove your work to mine a block:</h2>
+        <form id="miner-form" class="bg-gray-100 p-4 rounded shadow-md">
+            <div class="mb-4">
+                <label for="challenge" class="block text-sm font-medium text-gray-600 mb-2">Solve this:</label>
+                <span id="challenge" class="text-lg font-bold"></span>
+                <input type="number" id="solution" name="solution" placeholder="Your answer"
+                    class="p-2 w-full border rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-gray-500 mt-2">
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="bg-gray-800 hover:bg-gray-700 text-white rounded-md p-2">Mine
+                    Block</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const SERVER_URL = 'https://semac.ngrok.io';
+        const socket = io.connect(SERVER_URL);
+
+        // Random challenge generator
+        function generateChallenge() {
+            const a = Math.floor(Math.random() * 10);
+            const b = Math.floor(Math.random() * 10);
+            document.getElementById('challenge').textContent = `${a} + ${b}`;
+            return a + b;
+        }
+
+        const correctSolution = generateChallenge();
+
+        // Handle form submission
+        document.getElementById('miner-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const userSolution = Number(document.getElementById('solution').value);
+
+            if (userSolution === correctSolution) {
+                // Emit the new-block-mined event through socket.io
+                socket.emit('new-block-mined', { solution: userSolution });
+                alert('Solution submitted to the server. Waiting for block verification...');
+                // redirect user to index
+                window.location.href = '/';
+            } else {
+                alert('Incorrect solution. Try again.');
+            }
+        });
+    </script>
+</body>
+
+</html>
