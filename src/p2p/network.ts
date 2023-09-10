@@ -93,6 +93,9 @@ class P2PServer {
         const blockAdded = this.blockchain.addBlock(payload);
         this.io.emit('notify-new-block', blockAdded);
       }
+
+      // clear mempool
+      this.mempool.clearMempool();
     });
 
     /**
