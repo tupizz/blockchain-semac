@@ -1,3 +1,9 @@
+# SEMAC 2023 Demo
+
+### Slides
+
+[Canva Slides Link](https://www.canva.com/design/DAFtanJ4_NA/rzrGZSmgLzGXdqpvlpnQnQ/view?utm_content=DAFtanJ4_NA&utm_campaign=designshare&utm_medium=link&utm_source=viewer)
+
 ### Demo
 
 
